@@ -26,30 +26,33 @@ class SkipList {
 
     private int randomLevel() {
         int lvl = 0;
-        while (lvl < MAX_LEVEL && random.nextInt(2) == 1) {
+        while (lvl < MAX_LEVEL && random.nextInt(4) != 0) {
             lvl++;
         }
         return lvl;
     }
 
     public void insert(int value, int newLevel) {
+
+        // niz koji prati  sve cvorove koje treba azurirat
         SkipListNode[] update = new SkipListNode[MAX_LEVEL + 1];
         SkipListNode current = head;
 
+        // dodati novi cvor na odgovarajucu lokaciju
         for (int i = level; i >= 0; i--) {
             while (current.forward[i] != null && current.forward[i].value < value) {
                 current = current.forward[i];
             }
             update[i] = current;
         }
-
+        // azurirati levele
         if (newLevel > level) {
             for (int i = level + 1; i <= newLevel; i++) {
                 update[i] = head;
             }
             level = newLevel;
         }
-
+        // ubaci novi cvor
         SkipListNode newNode = new SkipListNode(value, newLevel);
         for (int i = 0; i <= newLevel; i++) {
             newNode.forward[i] = update[i].forward[i];
@@ -58,7 +61,7 @@ class SkipList {
     }
 
     public void printByLevel() {
-        for (int i = level; i >= 0; i--) {
+        for (int i = 0; i<= level; i++) {
             SkipListNode current = head.forward[i];
             System.out.print("Level " + i + ": ");
             while (current != null) {
@@ -77,6 +80,10 @@ class SkipList {
         skipList.insert(6, skipList.randomLevel());
         skipList.insert(8, skipList.randomLevel());
         skipList.insert(10, skipList.randomLevel());
+
+
+        skipList.insert(7, skipList.randomLevel());
+
 
         skipList.printByLevel();
     }
